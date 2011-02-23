@@ -3,18 +3,43 @@
     android:orientation="vertical"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:background="@drawable/background"
     >
+    <RelativeLayout
+    	android:layout_width="fill_parent" 
+        android:layout_height="wrap_content">
+       	<TextView  
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content" 
+    	android:text="@string/hello"
+    	/> 
+    	<ImageButton
+    	android:id="@+id/restart"	
+    	android:layout_width="wrap_content" 
+    	android:layout_height="wrap_content" 
+    	android:src="@drawable/ai"
+    	android:layout_alignParentRight="true">
+    	</ImageButton>
+    	<ImageButton
+    	android:id="@+id/back"	
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content" 
+    	android:src="@drawable/human"
+    	android:layout_alignParentRight="true"
+    	android:layout_alignLeft="@id/restart">
+    	</ImageButton>
+    </RelativeLayout>
     <FrameLayout 
     	android:layout_width="fill_parent" 
         android:layout_height="fill_parent"
         android:layout_weight="1" >      
-			<com.wing.game.wzq.GameView android:id="@+id/gameview"
+			<com.wing.game.wzq.ui.GameView android:id="@+id/gameview"
         	android:layout_width="fill_parent" 
         	android:layout_height="fill_parent" />
     </FrameLayout>
 	<TextView  
-    android:layout_width="fill_parent" 
-    android:layout_height="wrap_content" 
-    android:text="@string/hello"
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content" 
+    	android:text="@string/hello"
     />
 </LinearLayout>

@@ -8,9 +8,9 @@ import com.wing.game.wzq.Application;
  * 记录棋子的走法、位置
  */
 public class Position {
-	int ID;//表明是什么棋子
-	int posX;//起始的x坐标
-	int posY;//起始的Y坐标
+	private int ID;//表明是什么棋子
+	private int posX;//起始的x坐标
+	private int posY;//起始的Y坐标
 	public int getID() {
 		return ID;
 	}
@@ -60,5 +60,7 @@ public class Position {
 	public boolean isValid(){
 		return (0<=posX&&posX<=Application.GRID_SIZE)&&(0<=posY&&posY<=Application.GRID_SIZE);
 	}
-	
+	public boolean isWho(){
+		return (ID==Application.W);
+	}
 }

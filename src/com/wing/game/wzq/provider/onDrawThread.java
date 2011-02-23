@@ -1,9 +1,9 @@
 package com.wing.game.wzq.provider;
 
+import com.wing.game.wzq.ui.GameView;
+
 import android.graphics.Canvas;
 import android.view.SurfaceHolder;
-
-import com.wing.game.wzq.GameView;
 
 public class onDrawThread extends Thread{//刷帧线程
 	private int span = 100;//睡眠的毫秒数 
