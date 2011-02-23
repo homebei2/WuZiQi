@@ -5,13 +5,23 @@
     android:layout_height="fill_parent"
     android:background="@drawable/background"
     >
+    <FrameLayout 
+    	android:layout_width="fill_parent" 
+        android:layout_height="fill_parent"
+        android:layout_weight="1" >      
+			<com.wing.game.wzq.ui.GameView android:id="@+id/gameview"
+        	android:layout_width="fill_parent" 
+        	android:layout_height="fill_parent" />
+    </FrameLayout>
     <RelativeLayout
     	android:layout_width="fill_parent" 
         android:layout_height="wrap_content">
        	<TextView  
+       	android:id="@+id/time"	
     	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content" 
-    	android:text="@string/hello"
+    	android:layout_alignParentLeft="true"
+    	android:text="@string/time"
     	/> 
     	<ImageButton
     	android:id="@+id/restart"	
@@ -22,24 +32,16 @@
     	</ImageButton>
     	<ImageButton
     	android:id="@+id/back"	
-    	android:layout_width="fill_parent" 
+    	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content" 
+    	android:layout_marginLeft="20px"
     	android:src="@drawable/human"
-    	android:layout_alignParentRight="true"
-    	android:layout_alignLeft="@id/restart">
+    	android:layout_toLeftOf="@id/restart">
     	</ImageButton>
     </RelativeLayout>
-    <FrameLayout 
-    	android:layout_width="fill_parent" 
-        android:layout_height="fill_parent"
-        android:layout_weight="1" >      
-			<com.wing.game.wzq.ui.GameView android:id="@+id/gameview"
-        	android:layout_width="fill_parent" 
-        	android:layout_height="fill_parent" />
-    </FrameLayout>
 	<TextView  
     	android:layout_width="fill_parent" 
     	android:layout_height="wrap_content" 
-    	android:text="@string/hello"
+    	android:text="广告......"
     />
 </LinearLayout>
