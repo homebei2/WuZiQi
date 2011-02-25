@@ -69,15 +69,158 @@ public class QiJu {
 		return isWin;
 	}
 	public Position getAiBestPosition(){
-		for(int i=0;i<=Application.GRID_SIZE;i++){
-			for(int j=0;j<=Application.GRID_SIZE;j++){
-				if(qiPan[i][j]==Application.NO){		
-					Position temp = new Position(Application.B,i,j);
-					this.setPosition(temp);
-					return temp;
+		Position temp;
+		analyzeChessMater();
+		if (fiveBetterPoints[0].score > 30) {
+			temp = fiveBetterPoints[0];
+		}else{
+			analyzeChessMater();
+			temp = fiveBetterPoints[0];
+		}
+		temp.setID(Application.B);
+		this.setPosition(temp);
+		return temp;
+//		for(int i=0;i<=Application.GRID_SIZE;i++){
+//			for(int j=0;j<=Application.GRID_SIZE;j++){
+//				if(qiPan[i][j]==Application.NO){		
+//					Position temp = new Position(Application.B,i,j);
+//					this.setPosition(temp);
+//					return temp;
+//				}
+//			}
+//		}
+	}
+	private void analyzeChessMater() {
+		int[] tmpChessHeng = new int[Application.ANALYZE_LEN];
+		int[] tmpChessShu = new int[Application.ANALYZE_LEN];
+		int[] tmpChessZX = new int[Application.ANALYZE_LEN];
+		int[] tmpChessYX = new int[Application.ANALYZE_LEN];
+		// 具体代码...
+		int i, j, k;
+		// 分析电脑的棋型/////////////////////////////////////////////////////
+		for (i = 0; i <= Application.GRID_SIZE; i++) {
+			for (j = 0; j <= Application.GRID_SIZE; j++) {
+				if (qiPan[i][j] == 0) {
+					// 找出横向的棋子的棋型
+					clearArray(tmpChessHeng);
+					for (k = 1; k <= Application.HALF_LEN; k++) {
+						if ((j + k) <= Application.GRID_SIZE) {
+							tmpChessHeng[Application.HALF_LEN + (k - 1)] = qiPan[i][j
+									+ k];
+						}
+						if ((j - k) >= 0) {
+							tmpChessHeng[Application.HALF_LEN - k] = qiPan[i][j
+									- k];
+						}
+					}
+				//	materChess[i][j][0] = analyzeDir(tmpChess, isWho);
+					// 找出竖向的棋子的棋型
+					clearArray(tmpChessShu);
+
+					for (k = 1; k <= Application.HALF_LEN; k++) {
+						if ((i + k) <= Application.GRID_SIZE) {
+							tmpChessShu[Application.HALF_LEN + (k - 1)] = qiPan[i
+									+ k][j];
+						}
+						if ((i - k) >= 0) {
+							tmpChessShu[Application.HALF_LEN - k] = qiPan[i
+									- k][j];
+						}
+					}
+				//	materChess[i][j][1] = analyzeDir(tmpChess, isWho);
+					// 找出左斜的棋子的棋型
+					clearArray(tmpChessZX);
+					for (k = 1; k <= Application.HALF_LEN; k++) {
+						if ((i + k) <= Application.GRID_SIZE && (j + k) <= Application.GRID_SIZE) {
+							tmpChessZX[Application.HALF_LEN + (k - 1)] = qiPan[i
+									+ k][j + k];
+						}
+						if ((i - k) >= 0 && (j - k) >= 0) {
+							tmpChessZX[Application.HALF_LEN - k] = qiPan[i
+									- k][j - k];
+						}
+					}
+				//	materChess[i][j][2] = analyzeDir(tmpChess, isWho);
+					// 找出右斜的棋子的棋型
+					clearArray(tmpChessYX);
+					for (k = 1; k <= Application.HALF_LEN; k++) {
+						if ((i - k) >= 0 && (j + k)<= Application.GRID_SIZE) {
+							tmpChessYX[Application.HALF_LEN + (k - 1)] = qiPan[i
+									- k][j + k];
+						}
+						if ((i + k) <= Application.GRID_SIZE && (j - k) >= 0) {
+							tmpChessYX[Application.HALF_LEN - k] = qiPan[i
+									+ k][j - k];
+						}
+					}
+					//保存较好的点
+					int wScore,bScore;
+					wScore = analyzeXlian(tmpChessShu,Application.W)+analyzeXlian(tmpChessShu,Application.W)
+						+analyzeXlian(tmpChessZX,Application.W)+analyzeXlian(tmpChessYX,Application.W);
+					insertBetterChessPoint(new Position(Application.W,i,j,wScore));
+					bScore = analyzeXlian(tmpChessShu,Application.B)+analyzeXlian(tmpChessShu,Application.B)
+					+analyzeXlian(tmpChessZX,Application.B)+analyzeXlian(tmpChessYX,Application.B);
+					insertBetterChessPoint(new Position(Application.B,i,j,bScore));
 				}
 			}
 		}
-		return null;
+	}
+	private void clearArray(int[] array) {
+		for (int i = 0; i < array.length; i++)
+			array[i] = 0;
+	}
+	/**
+	 * 分析存在几连
+	 * 
+	 * @param tmpChess
+	 */
+	public int analyzeXlian(int[] tmpChess, int isWho) {
+		int count = 0;
+		for (int i = 0; i < Application.HALF_LEN; i++) {
+			if (tmpChess[Application.HALF_LEN - (i + 1)] == isWho) {
+				count++;
+			} else {
+				break;
+			}
+		}
+		for (int i = 0; i < Application.HALF_LEN; i++) {
+			if (tmpChess[Application.HALF_LEN + i] == isWho) {
+				count++;
+			} else {
+				break;
+			}
+		}		
+		return count;
+	}
+	// 保存前5个较好的落子点
+	private Position[] fiveBetterPoints = new Position[5];
+	private void insertBetterChessPoint(Position cp) {
+		int i, j = 0;
+		Position tmpcp = null;
+		for (i = 0; i < 5; i++) {
+			if (null != fiveBetterPoints[i]) {
+				if (cp.score > fiveBetterPoints[i].score) {
+					tmpcp = fiveBetterPoints[i];
+					fiveBetterPoints[i] = cp;
+					for (j = i; j < 5; j++) {
+						if (null != fiveBetterPoints[j]) {
+							if (tmpcp.score > fiveBetterPoints[j].score) {
+								tmpcp = fiveBetterPoints[j];
+								fiveBetterPoints[j] = tmpcp;
+							}
+						} else {
+							fiveBetterPoints[j] = tmpcp;
+							break;
+						}
+					}
+					break;
+				}
+			} else {
+				fiveBetterPoints[i] = cp;
+				break;
+			}
+		}
+
+		tmpcp = null;
 	}
 }
