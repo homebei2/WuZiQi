@@ -4,21 +4,22 @@
     android:layout_height="fill_parent"
     android:background="@drawable/view"
     >
-    	<ImageButton
+    	<Button
     	android:id="@+id/Single"
-    	android:layout_width="wrap_content" 
+    	android:layout_width="fill_parent" 
     	android:layout_height="wrap_content" 
-    	android:src="@drawable/ai"
+    	android:text="@string/single"
+    	android:background="@drawable/menu"
     	android:layout_centerHorizontal="true"
-    	android:layout_centerVertical="true">
-    	</ImageButton>
-    	<ImageButton
+    	android:layout_centerVertical="true" >
+    	</Button>
+    	<Button
     	android:id="@+id/Multi"
-    	android:layout_width="wrap_content" 
+    	android:layout_width="fill_parent" 
     	android:layout_height="wrap_content" 
-    	android:layout_marginLeft="20px"
-    	android:src="@drawable/human"
+    	android:background="@drawable/menu"
+    	android:text="@string/multi"
     	android:layout_below="@+id/Single"
-    	android:layout_alignLeft="@+id/Single">
-    	</ImageButton>
+    	android:layout_centerHorizontal="true">
+    	</Button>
  </RelativeLayout>

@@ -2,6 +2,8 @@ package com.wing.game.wzq.provider;
 
 import java.util.ArrayList;
 
+import com.wing.game.wzq.Application;
+
 public class RecordStack {
 	private  ArrayList<Position> record ;
 	private static RecordStack instance = new RecordStack();
@@ -13,8 +15,12 @@ public class RecordStack {
 		return instance;
 	}
 	public void pop(){
-		record.remove(getCount()-1);//移除电脑最后一步棋
-		record.remove(getCount()-1);//移除玩家最后一步棋
+		for(int i=0;i<=1&&record.size()>0;i++){
+			Position temp;
+			temp =record.remove(getCount()-1);//抛出最后一步黑棋
+			temp.setID(Application.NO);
+			QiJu.getInstance().setPosition(temp);
+		}
 	}
 	public void put(Position pos){
 		record.add(pos);

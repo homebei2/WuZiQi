@@ -16,6 +16,7 @@
     <RelativeLayout
     	android:layout_width="fill_parent" 
         android:layout_height="wrap_content">
+        >
        	<TextView  
        	android:id="@+id/time"	
     	android:layout_width="wrap_content" 
@@ -23,21 +24,23 @@
     	android:layout_alignParentLeft="true"
     	android:text="@string/time"
     	/> 
-    	<ImageButton
+    	<Button
     	android:id="@+id/restart"	
     	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content" 
-    	android:src="@drawable/ai"
+    	android:text="@string/restart"
+    	android:background="@drawable/menu"
     	android:layout_alignParentRight="true">
-    	</ImageButton>
-    	<ImageButton
+    	</Button>
+    	<Button
     	android:id="@+id/back"	
     	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content" 
     	android:layout_marginLeft="20px"
-    	android:src="@drawable/human"
+    	android:text="@string/back"
+    	android:background="@drawable/menu"
     	android:layout_toLeftOf="@id/restart">
-    	</ImageButton>
+    	</Button>
     </RelativeLayout>
 	<TextView  
     	android:layout_width="fill_parent" 

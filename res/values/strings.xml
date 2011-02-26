@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="time">用时: %d:%d</string>
-    <string name="app_name">WuZiQi</string>
+    <string name="app_name">五子棋</string>
+    <string name="back">悔棋</string>
+    <string name="restart">重来</string>
+    <string name="single">单人游戏</string>
+    <string name="multi">双人游戏</string>
 </resources>

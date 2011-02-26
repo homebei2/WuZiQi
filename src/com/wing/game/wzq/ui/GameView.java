@@ -3,8 +3,10 @@ package com.wing.game.wzq.ui;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
@@ -22,7 +24,7 @@ import com.wing.game.wzq.provider.RecordStack;
 import com.wing.game.wzq.provider.onDrawThread;
 
 public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
-	private Bitmap wBitmap,wBitmapLast, bBitmap,bBitmapLast,bg;
+	private Bitmap wBitmap,wBitmapLast, bBitmap,bBitmapLast,bg,win,time,vs;
 	private Bitmap[] cursor;
 	private onDrawThread drawThread;
 	private int cursorTime;
@@ -60,7 +62,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 
 		chess_dia = grid_width - 2;
 		mStartX = (width - Application.GRID_SIZE * grid_width) >> 1;
-		mStartY = 100;
+		mStartY = 80;
 		
 		Bitmap bitmap = Bitmap.createBitmap(chess_dia, chess_dia,
 				Bitmap.Config.ARGB_8888);
@@ -133,8 +135,17 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 		tile = r.getDrawable(R.drawable.background);
 		tile.setBounds(0, 0, width, height);
 		tile.draw(canvas);
-		bg = bitmap;
-
+		bg = bitmap;		
+		
+		win = reSizePicture(BitmapFactory.decodeResource(getResources(),
+				R.drawable.win),2*chess_dia, 2*chess_dia);
+			 
+		vs = reSizePicture(BitmapFactory.decodeResource(getResources(),
+				R.drawable.vs),2*chess_dia, 2*chess_dia);
+			 
+		time = reSizePicture(BitmapFactory.decodeResource(getResources(),
+				R.drawable.time),2*chess_dia, 2*chess_dia);
+			 	
 	}
 	public void surfaceChanged(SurfaceHolder holder, int format, int width,
 			int height) {
@@ -236,6 +247,13 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 			for(int i=0;i<RecordStack.getInstance().getCount();i++){
 				temp = RecordStack.getInstance().getPosition(i);
 				if(RecordStack.getInstance().isLast(i)){
+					if(QiJu.getInstance().isWin()){//胜利图标
+						canvas.drawBitmap(win,temp.isWho()?80:200,20,
+								mPaint);
+					}else{
+						canvas.drawBitmap(time,temp.isWho()?200:80,20,
+								mPaint);
+					}
 					if(temp.isWho()){
 						canvas.drawBitmap(wBitmapLast, mStartX + (temp.getPosX())
 								* grid_width - (chess_dia >> 1), mStartY
@@ -262,6 +280,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 					}
 				}
 			}
+			//画选中棋盘位置
 			if(isTouched){
 				canvas.drawBitmap(cursor[cursorTime%3], mStartX + (lastPos.getPosX())
 						* grid_width - (chess_dia >> 1), mStartY
@@ -269,6 +288,38 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 						mPaint);
 				cursorTime++;
 			}
+			//画顶部界面
+			canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),
+					R.drawable.human),20,20,
+					mPaint);
+			canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),
+					R.drawable.ai),260,20,
+					mPaint);	
+			canvas.drawBitmap(vs,138,20,
+					mPaint);
 			
+	}
+	public void setRunMode(boolean runMode){
+		this.runMode = runMode;
+	}
+	public void reInit(){
+		isWho = Application.WHITE;
+	}
+	public static Bitmap reSizePicture(Bitmap orgImg, int newWidth,
+			int newHeight) {
+		Bitmap resizedBitmap = null;
+		if (orgImg != null) {
+			int width = orgImg.getWidth();
+			int height = orgImg.getHeight();
+			float scaleWidth = ((float) newWidth) / width;
+			float scaleHeight = ((float) newHeight) / height;
+			Matrix matrix = new Matrix();
+			matrix.postScale(scaleWidth, scaleHeight);
+
+			resizedBitmap = Bitmap.createBitmap(orgImg, 0, 0, width, height,
+					matrix, true);
+		}
+
+		return resizedBitmap;
 	}
 }

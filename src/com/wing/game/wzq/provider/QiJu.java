@@ -1,7 +1,4 @@
 package com.wing.game.wzq.provider;
-
-import java.util.Random;
-
 import android.util.Log;
 
 import com.wing.game.wzq.Application;
@@ -23,6 +20,7 @@ public class QiJu {
 			{
 				qiPan[i][j]=Application.NO;
 			}
+			isWin=false;
 	}
 	public void setPosition(Position pos){
 		int x = pos.getPosX();
@@ -31,7 +29,7 @@ public class QiJu {
 		//横 
 		int q = 0;
 		for(int i=0;i<5;i++){
-			Log.i("setPositon","(x,y,i)"+x+","+y+","+i);
+//			Log.i("setPositon","(x,y,i)"+x+","+y+","+i);
 			if(x+i<=Application.GRID_SIZE&&(x+i-4)>=0){
 				q=(qiPan[x+i][y]+qiPan[x+i-1][y]+qiPan[x+i-2][y]+qiPan[x+i-3][y]+qiPan[x+i-4][y]);
 				if(q==5||q==-5){
@@ -39,6 +37,7 @@ public class QiJu {
 					break;
 				}
 			}
+			//竖
 			if(y+i<=Application.GRID_SIZE&&(y+i-4)>=0){
 				q=(qiPan[x][y+i]+qiPan[x][y+i-1]+qiPan[x][y+i-2]+qiPan[x][y+i-3]+qiPan[x][y+i-4]);
 				if(q==5||q==-5){
@@ -46,13 +45,16 @@ public class QiJu {
 					break;
 				}
 			}
+			//左撇
 			if(y+i<=Application.GRID_SIZE&&(y+i-4)>=0&&x+i<=Application.GRID_SIZE&&(x+i-4)>=0){
-				q=(qiPan[x+i][y+i]+qiPan[x+i+1][y+i-1]+qiPan[x+i-2][y+i-2]+qiPan[x+i-3][y+i-3]+qiPan[x+i-4][y+i-4]);
+				Log.i("setPosition", (y+i-4)+","+(x+i-4)+","+(y+i)+","+(x+i));
+				q=(qiPan[x+i][y+i]+qiPan[x+i-1][y+i-1]+qiPan[x+i-2][y+i-2]+qiPan[x+i-3][y+i-3]+qiPan[x+i-4][y+i-4]);
 				if(q==5||q==-5){
 					isWin=true;
 					break;
 				}
 			}
+			//右捺
 			if(y+i<=Application.GRID_SIZE&&(y+i-4)>=0&&(x-i+4)<=Application.GRID_SIZE&&(x-i)>=0){
 				q=(qiPan[x-i][y+i]+qiPan[x-i+1][y+i-1]+qiPan[x-i+2][y+i-2]+qiPan[x-i+3][y+i-3]+qiPan[x-i+4][y+i-4]);
 				if(q==5||q==-5){
@@ -70,15 +72,17 @@ public class QiJu {
 	}
 	public Position getAiBestPosition(){
 		Position temp;
+		clearPoints();
 		analyzeChessMater();
-		if (fiveBetterPoints[0].score > 30) {
+		if (fiveBetterPoints[0].score >0) {
 			temp = fiveBetterPoints[0];
 		}else{
 			analyzeChessMater();
+			clearPoints();
 			temp = fiveBetterPoints[0];
 		}
-		temp.setID(Application.B);
-		this.setPosition(temp);
+		setPosition(temp);
+		Log.i("getAiBestPosition", fiveBetterPoints[0].score+":"+temp.getPosX()+","+temp.getPosY());
 		return temp;
 //		for(int i=0;i<=Application.GRID_SIZE;i++){
 //			for(int j=0;j<=Application.GRID_SIZE;j++){
@@ -91,10 +95,6 @@ public class QiJu {
 //		}
 	}
 	private void analyzeChessMater() {
-		int[] tmpChessHeng = new int[Application.ANALYZE_LEN];
-		int[] tmpChessShu = new int[Application.ANALYZE_LEN];
-		int[] tmpChessZX = new int[Application.ANALYZE_LEN];
-		int[] tmpChessYX = new int[Application.ANALYZE_LEN];
 		// 具体代码...
 		int i, j, k;
 		// 分析电脑的棋型/////////////////////////////////////////////////////
@@ -157,10 +157,10 @@ public class QiJu {
 					int wScore,bScore;
 					wScore = analyzeXlian(tmpChessShu,Application.W)+analyzeXlian(tmpChessShu,Application.W)
 						+analyzeXlian(tmpChessZX,Application.W)+analyzeXlian(tmpChessYX,Application.W);
-					insertBetterChessPoint(new Position(Application.W,i,j,wScore));
 					bScore = analyzeXlian(tmpChessShu,Application.B)+analyzeXlian(tmpChessShu,Application.B)
 					+analyzeXlian(tmpChessZX,Application.B)+analyzeXlian(tmpChessYX,Application.B);
-					insertBetterChessPoint(new Position(Application.B,i,j,bScore));
+
+					insertBetterChessPoint(new Position(Application.B,i,j,(wScore>bScore?wScore:bScore)));
 				}
 			}
 		}
@@ -168,6 +168,10 @@ public class QiJu {
 	private void clearArray(int[] array) {
 		for (int i = 0; i < array.length; i++)
 			array[i] = 0;
+	}
+	private void clearPoints() {
+		for (int i = 0; i < 5; i++)
+			fiveBetterPoints[i] = null;
 	}
 	/**
 	 * 分析存在几连
@@ -194,7 +198,12 @@ public class QiJu {
 	}
 	// 保存前5个较好的落子点
 	private Position[] fiveBetterPoints = new Position[5];
+	private int[] tmpChessHeng = new int[Application.ANALYZE_LEN];
+	private int[] tmpChessShu = new int[Application.ANALYZE_LEN];
+	private int[] tmpChessZX = new int[Application.ANALYZE_LEN];
+	private int[] tmpChessYX = new int[Application.ANALYZE_LEN];
 	private void insertBetterChessPoint(Position cp) {
+//		Log.i("insertBetterChessPoint", cp.score+":"+cp.getPosX()+","+cp.getPosY());
 		int i, j = 0;
 		Position tmpcp = null;
 		for (i = 0; i < 5; i++) {
