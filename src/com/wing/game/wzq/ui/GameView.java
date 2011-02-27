@@ -18,6 +18,7 @@ import android.view.SurfaceView;
 
 import com.wing.game.wzq.Application;
 import com.wing.game.wzq.R;
+import com.wing.game.wzq.provider.ChessFormUtil;
 import com.wing.game.wzq.provider.Position;
 import com.wing.game.wzq.provider.QiJu;
 import com.wing.game.wzq.provider.RecordStack;
@@ -39,7 +40,6 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 	private boolean isTouched=false; 
 	private boolean runMode=Application.SINGLEPLAYER;
 	private boolean isWho = Application.WHITE;
-	
 	public GameView(Context context) {
 		super(context);
 		this.getHolder().addCallback(this);
@@ -195,14 +195,11 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 			if(isTouched&&lastPos.equals(temp)){
 				//记录棋子落点
 				isTouched=false;
-				initPosition(temp);
-				
+				initPosition(temp);				
 				RecordStack.getInstance().put(temp);
-				QiJu.getInstance().setPosition(temp);
-				
+				QiJu.getInstance().setPosition(temp);				
 				if(runMode==Application.SINGLEPLAYER&&!QiJu.getInstance().isWin()){
-					temp = QiJu.getInstance().getAiBestPosition();
-					RecordStack.getInstance().put(temp);
+					QiJu.getInstance().getAiBestPosition();					
 				}
 			}else if(QiJu.getInstance().isValid(temp)){//选中位置在棋盘内且没有下子
 				lastPos=temp;

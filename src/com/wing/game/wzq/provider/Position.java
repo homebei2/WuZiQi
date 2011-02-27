@@ -35,7 +35,7 @@ public class Position {
 	public void setScore(int score) {
 		this.score = score;
 	}
-	int score;//值,估值时会用到
+	private int score;//值,估值时会用到
 	public Position(int ID, int posX,int posY,int score){//构造器
 		this.ID = ID;//棋子的类型
 		this.posX = posX;

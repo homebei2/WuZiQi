@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="time">用时: %d:%d</string>
+    <string name="time">用时:</string>
     <string name="app_name">五子棋</string>
     <string name="back">悔棋</string>
     <string name="restart">重来</string>
