@@ -25,7 +25,7 @@ import com.wing.game.wzq.provider.RecordStack;
 import com.wing.game.wzq.provider.onDrawThread;
 
 public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
-	private Bitmap wBitmap,wBitmapLast, bBitmap,bBitmapLast,bg,win,time,vs;
+	private Bitmap wBitmap,last, bBitmap,bg,win,time,vs;
 	private Bitmap[] cursor;
 	private onDrawThread drawThread;
 	private int cursorTime;
@@ -81,25 +81,15 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 		tile.setBounds(0, 0, chess_dia, chess_dia);
 		tile.draw(canvas);
 		wBitmap = bitmap;
-		
-		
+					
 		bitmap = Bitmap.createBitmap(chess_dia, chess_dia,
 				Bitmap.Config.ARGB_8888);
 		canvas = new Canvas(bitmap); // Bitmap + Canvas + Drawable ==
 		// 标准的Bitmap绘制。
-		tile = r.getDrawable(R.drawable.human_last);
+		tile = r.getDrawable(R.drawable.last);
 		tile.setBounds(0, 0, chess_dia, chess_dia);
 		tile.draw(canvas);
-		wBitmapLast = bitmap;
-		
-		bitmap = Bitmap.createBitmap(chess_dia, chess_dia,
-				Bitmap.Config.ARGB_8888);
-		canvas = new Canvas(bitmap); // Bitmap + Canvas + Drawable ==
-		// 标准的Bitmap绘制。
-		tile = r.getDrawable(R.drawable.ai_last);
-		tile.setBounds(0, 0, chess_dia, chess_dia);
-		tile.draw(canvas);
-		bBitmapLast = bitmap;
+		last = bitmap;
 		
 		
 		cursor = new Bitmap[3];
@@ -179,6 +169,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 	private void initPosition(Position pos){
 		if(runMode==Application.SINGLEPLAYER){
 			//
+			isWho=Application.BLACK;
 		}else if(isWho){
 			isWho=Application.BLACK;
 			//			
@@ -199,7 +190,8 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 				RecordStack.getInstance().put(temp);
 				QiJu.getInstance().setPosition(temp);				
 				if(runMode==Application.SINGLEPLAYER&&!QiJu.getInstance().isWin()){
-					QiJu.getInstance().getAiBestPosition();					
+					QiJu.getInstance().getAiBestPosition();		
+					isWho=Application.WHITE;
 				}
 			}else if(QiJu.getInstance().isValid(temp)){//选中位置在棋盘内且没有下子
 				lastPos=temp;
@@ -242,28 +234,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 		// 画棋子
 			Position temp;
 			for(int i=0;i<RecordStack.getInstance().getCount();i++){
-				temp = RecordStack.getInstance().getPosition(i);
-				if(RecordStack.getInstance().isLast(i)){
-					if(QiJu.getInstance().isWin()){//胜利图标
-						canvas.drawBitmap(win,temp.isWho()?80:200,20,
-								mPaint);
-					}else{
-						canvas.drawBitmap(time,temp.isWho()?200:80,20,
-								mPaint);
-					}
-					if(temp.isWho()){
-						canvas.drawBitmap(wBitmapLast, mStartX + (temp.getPosX())
-								* grid_width - (chess_dia >> 1), mStartY
-								+ (temp.getPosY()) * grid_width - (chess_dia >> 1),
-								mPaint);
-					}else{
-						canvas.drawBitmap(bBitmapLast, mStartX + (temp.getPosX())
-								* grid_width - (chess_dia >> 1), mStartY
-								+ (temp.getPosY()) * grid_width - (chess_dia >> 1),
-								mPaint);
-					}
-						
-				}else{
+				temp = RecordStack.getInstance().getPosition(i);					
 					if(temp.isWho()){
 						canvas.drawBitmap(wBitmap, mStartX + (temp.getPosX())
 								* grid_width - (chess_dia >> 1), mStartY
@@ -275,7 +246,18 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 								+ (temp.getPosY()) * grid_width - (chess_dia >> 1),
 								mPaint);
 					}
-				}
+					if(RecordStack.getInstance().isLast(i)){
+						canvas.drawBitmap(last, mStartX + (temp.getPosX())
+								* grid_width - (chess_dia >> 1), mStartY
+								+ (temp.getPosY()) * grid_width - (chess_dia >> 1),
+								mPaint);
+					}
+					if(RecordStack.getInstance().isLast(i+1)){
+						canvas.drawBitmap(last, mStartX + (temp.getPosX())
+								* grid_width - (chess_dia >> 1), mStartY
+								+ (temp.getPosY()) * grid_width - (chess_dia >> 1),
+								mPaint);
+					}
 			}
 			//画选中棋盘位置
 			if(isTouched){
@@ -294,7 +276,13 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 					mPaint);	
 			canvas.drawBitmap(vs,138,20,
 					mPaint);
-			
+			if(QiJu.getInstance().isWin()){//胜利图标
+				canvas.drawBitmap(win,isWho?200:80,20,
+						mPaint);
+			}else{
+				canvas.drawBitmap(time,isWho?80:200,20,
+						mPaint);
+			}
 	}
 	public void setRunMode(boolean runMode){
 		this.runMode = runMode;

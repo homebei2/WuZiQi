@@ -29,6 +29,7 @@ public class GameActivity extends Activity implements OnClickListener {
 	private GameView gameView;
 	private static boolean runMode;
 	private Handler timeHandler;
+	private boolean flag = true;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -49,11 +50,26 @@ public class GameActivity extends Activity implements OnClickListener {
         
         timer = (TextView) this.findViewById(R.id.time);
         timer.setTextColor(Color.BLACK);
-        
         timeHandler = new TimeHandler(Looper.getMainLooper());  
         timeThread = new TimeThread();
         timeThread.start();
     }
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		super.onPause();
+	}
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		flag = false;
+	}
+	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		super.onResume();
+	}
 	private void fullScreen(){
     	requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN ,  
@@ -94,7 +110,7 @@ public class GameActivity extends Activity implements OnClickListener {
 	}
 	class TimeThread extends Thread{
 		public void run() {
-			while(true){
+			while(flag){
 				if(!QiJu.getInstance().isWin()){
 					time++;
 				}

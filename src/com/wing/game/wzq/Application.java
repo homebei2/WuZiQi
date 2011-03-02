@@ -11,4 +11,5 @@ public class Application {
 	public static final boolean BLACK = false;
 	public static final boolean MULTIPLAYER = false;
 	public static final boolean SINGLEPLAYER = true;
+	public static final int CHECK_DIR = 4;
 }

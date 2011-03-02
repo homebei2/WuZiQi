@@ -6,7 +6,7 @@ import android.graphics.Canvas;
 import android.view.SurfaceHolder;
 
 public class onDrawThread extends Thread{//刷帧线程
-	private int span = 100;//睡眠的毫秒数 
+	private int span = 300;//睡眠的毫秒数 
 	private SurfaceHolder surfaceHolder;//SurfaceHolder的引用
 	private GameView gameView;//gameView的引用
 	private boolean flag = false;//循环标志位

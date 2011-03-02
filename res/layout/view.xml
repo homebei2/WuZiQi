@@ -6,7 +6,7 @@
     >
     	<Button
     	android:id="@+id/Single"
-    	android:layout_width="fill_parent" 
+    	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content" 
     	android:text="@string/single"
     	android:background="@drawable/menu"
@@ -15,7 +15,7 @@
     	</Button>
     	<Button
     	android:id="@+id/Multi"
-    	android:layout_width="fill_parent" 
+    	android:layout_width="wrap_content" 
     	android:layout_height="wrap_content" 
     	android:background="@drawable/menu"
     	android:text="@string/multi"
