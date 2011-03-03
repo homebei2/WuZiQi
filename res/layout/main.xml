@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical"
+   	android:id="@+id/main"	
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="@drawable/background"
@@ -23,6 +24,7 @@
     	android:layout_height="wrap_content" 
     	android:layout_alignParentLeft="true"
     	android:text="@string/time"
+    	android:visibility="gone"
     	/> 
     	<Button
     	android:id="@+id/restart"	
@@ -42,9 +44,12 @@
     	android:layout_toLeftOf="@id/restart">
     	</Button>
     </RelativeLayout>
-	<TextView  
-    	android:layout_width="fill_parent" 
-    	android:layout_height="wrap_content" 
-    	android:text="广告......"
-    />
+ 	<LinearLayout
+    android:id="@+id/adLayout"
+    android:layout_width="fill_parent"
+    android:layout_height="50dip"
+    android:paddingTop="10dip"
+    android:paddingBottom="5dip"
+    android:layout_alignParentBottom="true"
+    android:gravity="bottom" />
 </LinearLayout>

@@ -4,22 +4,22 @@
     android:layout_height="fill_parent"
     android:background="@drawable/view"
     >
-    	<Button
-    	android:id="@+id/Single"
-    	android:layout_width="wrap_content" 
-    	android:layout_height="wrap_content" 
-    	android:text="@string/single"
-    	android:background="@drawable/menu"
-    	android:layout_centerHorizontal="true"
-    	android:layout_centerVertical="true" >
-    	</Button>
-    	<Button
+        <Button
     	android:id="@+id/Multi"
-    	android:layout_width="wrap_content" 
+    	android:layout_width="fill_parent" 
     	android:layout_height="wrap_content" 
     	android:background="@drawable/menu"
     	android:text="@string/multi"
-    	android:layout_below="@+id/Single"
+    	android:layout_centerHorizontal="true"
+    	android:layout_alignParentBottom="true" >
+    	</Button>
+    	<Button
+    	android:id="@+id/Single"
+    	android:layout_width="fill_parent" 
+    	android:layout_height="wrap_content" 
+    	android:text="@string/single"
+    	android:layout_above="@id/Multi"
+    	android:background="@drawable/menu"
     	android:layout_centerHorizontal="true">
     	</Button>
  </RelativeLayout>

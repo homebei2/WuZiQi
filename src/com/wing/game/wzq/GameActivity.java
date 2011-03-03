@@ -9,13 +9,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.util.Log;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
-
+import com.guohead.sdk.GuoheAdLayout;
+import com.guohead.sdk.GuoheAdManager;
 import com.wing.game.wzq.provider.QiJu;
 import com.wing.game.wzq.provider.RecordStack;
 import com.wing.game.wzq.ui.GameView;
@@ -47,28 +52,38 @@ public class GameActivity extends Activity implements OnClickListener {
         back =(Button) this.findViewById(R.id.back);
         back.setOnClickListener(this);
         
-        
-        timer = (TextView) this.findViewById(R.id.time);
-        timer.setTextColor(Color.BLACK);
-        timeHandler = new TimeHandler(Looper.getMainLooper());  
-        timeThread = new TimeThread();
-        timeThread.start();
+        RelativeLayout.LayoutParams GuoheAdLayoutParams = new RelativeLayout.LayoutParams(
+                LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
+        LinearLayout footer = (LinearLayout)findViewById(R.id.adLayout);
+        GuoheAdLayout adLayout = new GuoheAdLayout(this);
+        footer.addView(adLayout, GuoheAdLayoutParams);
+        footer.invalidate();
+        //timer = (TextView) this.findViewById(R.id.time);
+        //timer.setTextColor(Color.BLACK);
+        //timeHandler = new TimeHandler(Looper.getMainLooper());  
+        //timeThread = new TimeThread();
+        //timeThread.start();
     }
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
+		Log.e("onPause", "onPause");
 	}
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		flag = false;
+		GuoheAdManager.finish(this);
+		Log.e("onDestroy", "onDestroy");
 	}
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
+		Log.e("onResume", "onResume");
+		this.findViewById(R.id.main).invalidate();
 	}
 	private void fullScreen(){
     	requestWindowFeature(Window.FEATURE_NO_TITLE);

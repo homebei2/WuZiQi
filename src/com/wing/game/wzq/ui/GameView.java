@@ -145,8 +145,12 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 
 	public void surfaceCreated(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
+		if(drawThread==null){
+			drawThread = new onDrawThread(getHolder(),this);
+		}
 		drawThread.setFlag(true);
 		drawThread.start();
+		Log.e("surfaceCreated", "surfaceCreated");
 	}
 	private Position getPosition(float x,float y){
 		int posX;
@@ -163,7 +167,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 		} else {
 			posY = (int) ((y - mStartY) / grid_width);
 		}
-		Log.v("x,y", "" + posX + "," + posY);
+//		Log.v("x,y", "" + posX + "," + posY);
 		return new Position(Application.W,posX,posY); 
 	}
 	private void initPosition(Position pos){
@@ -207,6 +211,8 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
 		drawThread.setFlag(false);
+		drawThread = null;
+		Log.e("surfaceDestroyed", "surfaceDestroyed");
 	}
 	public void onDraw(Canvas canvas){
 		//canvas.drawColor(Color.WHITE);

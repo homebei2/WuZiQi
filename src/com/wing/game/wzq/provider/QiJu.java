@@ -149,9 +149,9 @@ public class QiJu {
 		}
 		setPosition(bestPosition);
 		RecordStack.getInstance().put(bestPosition);
-		for (int i = 0; i < 5; i++){
-			Log.e("getAiBestPosition", fiveBetterPoints[i].getScore() + ":"+ fiveBetterPoints[i].getPosX() + "," + fiveBetterPoints[i].getPosY());
-		}
+//		for (int i = 0; i < 5&&fiveBetterPoints[i]!=null; i++){
+//			Log.e("getAiBestPosition", fiveBetterPoints[i].getScore() + ":"+ fiveBetterPoints[i].getPosX() + "," + fiveBetterPoints[i].getPosY());
+//		}
 	}
 
 	private void analyzeChessMater(int sx, int sy, int ex, int ey ) {
