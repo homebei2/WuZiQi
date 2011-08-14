@@ -8,14 +8,13 @@ public class RecordStack {
 	private  ArrayList<Position> record ;
 	private static RecordStack instance = new RecordStack();
 	private RecordStack(){
-		instance = this;
 		record = new ArrayList<Position>() ;
 	}
 	public static RecordStack getInstance(){
 		return instance;
 	}
 	public void pop(){
-		for(int i=0;i<=1&&record.size()>0;i++){
+		if(record.size()>0){
 			Position temp;
 			temp =record.remove(getCount()-1);//抛出最后一步黑棋
 			temp.setID(Application.NO);

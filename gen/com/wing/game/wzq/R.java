@@ -8,6 +8,9 @@
 package com.wing.game.wzq;
 
 public final class R {
+    public static final class anim {
+        public static final int fade=0x7f040000;
+    }
     public static final class attr {
     }
     public static final class drawable {
@@ -28,25 +31,38 @@ public final class R {
         public static final int win=0x7f02000e;
     }
     public static final class id {
-        public static final int Multi=0x7f050006;
-        public static final int Single=0x7f050007;
-        public static final int adLayout=0x7f050005;
-        public static final int back=0x7f050004;
-        public static final int gameview=0x7f050001;
-        public static final int main=0x7f050000;
-        public static final int restart=0x7f050003;
-        public static final int time=0x7f050002;
+        public static final int Multi=0x7f070006;
+        public static final int Single=0x7f070007;
+        public static final int about=0x7f070008;
+        public static final int adLayout=0x7f070005;
+        public static final int back=0x7f070004;
+        public static final int gameview=0x7f070001;
+        public static final int main=0x7f070000;
+        public static final int quit=0x7f070009;
+        public static final int restart=0x7f070003;
+        public static final int time=0x7f070002;
     }
     public static final class layout {
         public static final int main=0x7f030000;
         public static final int view=0x7f030001;
     }
+    public static final class menu {
+        public static final int menu=0x7f060000;
+    }
     public static final class string {
-        public static final int app_name=0x7f040001;
-        public static final int back=0x7f040002;
-        public static final int multi=0x7f040005;
-        public static final int restart=0x7f040003;
-        public static final int single=0x7f040004;
-        public static final int time=0x7f040000;
+        public static final int about=0x7f050009;
+        public static final int app_about=0x7f05000d;
+        public static final int app_about_ok=0x7f05000c;
+        public static final int app_about_user=0x7f05000b;
+        public static final int app_name=0x7f050001;
+        public static final int back=0x7f050002;
+        public static final int dialog_cancel=0x7f050008;
+        public static final int dialog_message=0x7f050006;
+        public static final int dialog_ok=0x7f050007;
+        public static final int multi=0x7f050005;
+        public static final int quit=0x7f05000a;
+        public static final int restart=0x7f050003;
+        public static final int single=0x7f050004;
+        public static final int time=0x7f050000;
     }
 }

@@ -6,4 +6,21 @@
     <string name="restart">重来</string>
     <string name="single">单人游戏</string>
     <string name="multi">双人游戏</string>
+    <string name="dialog_message">请选择先后手</string>
+    <string name="dialog_ok">先手</string>
+    <string name="dialog_cancel">后手</string>
+    <string name="about">关于</string>
+    <string name="quit">退出</string>
+    
+   <string name="app_about_user">关注作者</string>
+    <string name="app_about_ok">取消</string>
+   	<string name="app_about">
+   	程序名： 五子棋\n
+   	版本号： 1.2v\n
+   	邮箱：    yale.yang.chu@gmail.com\n
+   	使用说明：可以选择单人模式，双人模式
+   	落子时需要先点选两次，
+   	第一次确定落子位置，
+   	第二次落子，是为了避免误点操作
+	</string>
 </resources>

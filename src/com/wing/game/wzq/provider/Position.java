@@ -61,6 +61,6 @@ public class Position {
 		return (0<=posX&&posX<=Application.GRID_SIZE)&&(0<=posY&&posY<=Application.GRID_SIZE);
 	}
 	public boolean isWho(){
-		return (ID==Application.W);
+		return (ID==Application.WHITE);
 	}
 }

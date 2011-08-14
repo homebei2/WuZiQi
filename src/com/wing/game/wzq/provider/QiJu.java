@@ -23,6 +23,10 @@ public class QiJu {
 			}
 		isWin = false;
 	}
+	public void onBackButton(){
+		if(isWin)
+			isWin=false;
+	}
 
 	public void setPosition(Position pos) {
 		int x = pos.getPosX();
@@ -97,64 +101,73 @@ public class QiJu {
 		return isWin;
 	}
 
-	public void getAiBestPosition() {
+	public void getAiBestPosition(int isWhoThinking) {
+
 		Position bestPosition;
-		clearPoints();
-		analyzeChessMater(0,0,Application.GRID_SIZE,Application.GRID_SIZE);
-		if (fiveBetterPoints[0].getScore() > 30) {
-			bestPosition = fiveBetterPoints[0];
+		if (RecordStack.getInstance().getCount() == 0) {
+			bestPosition = new Position(isWhoThinking, 6, 6);
 		} else {
-			Position[] tempPoints = new Position[5];
-			Position temp = null;
-			int goodIdx = 0;
-			int i = 0;
-			int startx, starty, endx, endy;
-			for (i = 0; i < 5; i++) {
-				tempPoints[i] = fiveBetterPoints[i];
-			}
-			for (i = 0; i < 5; i++) {
-				clearPoints();
-				if (tempPoints[i] == null)
-					break;	
-				startx = tempPoints[i].getPosX() - 5;
-				starty = tempPoints[i].getPosY() - 5;
-				if (startx < 0) {
-					startx = 0;
+			clearPoints();
+			analyzeChessMater(0, 0, Application.GRID_SIZE,
+					Application.GRID_SIZE, isWhoThinking);
+			if (fiveBetterPoints[0].getScore() > 30) {
+				bestPosition = fiveBetterPoints[0];
+			} else {
+				Position[] tempPoints = new Position[5];
+				Position temp = null;
+				int goodIdx = 0;
+				int i = 0;
+				int startx, starty, endx, endy;
+				for (i = 0; i < 5; i++) {
+					tempPoints[i] = fiveBetterPoints[i];
 				}
-				if (starty < 0) {
-					starty = 0;
-				}
-				endx = startx + 10;
-				endy = starty + 10;
-				if (endx > Application.GRID_SIZE) {
-					endx = Application.GRID_SIZE;
-				}
-				if (endy > Application.GRID_SIZE) {
-					endy = Application.GRID_SIZE;
-				}				
-				setPosition(new Position(Application.B,tempPoints[i].getPosX(),tempPoints[i].getPosY()));
-				analyzeChessMater(startx, starty, endx, endy);
-				if (temp != null) {
-					if (temp.getScore() < fiveBetterPoints[0].getScore()) {
+				for (i = 0; i < 5; i++) {
+					clearPoints();
+					if (tempPoints[i] == null)
+						break;
+					startx = tempPoints[i].getPosX() - 5;
+					starty = tempPoints[i].getPosY() - 5;
+					if (startx < 0) {
+						startx = 0;
+					}
+					if (starty < 0) {
+						starty = 0;
+					}
+					endx = startx + 10;
+					endy = starty + 10;
+					if (endx > Application.GRID_SIZE) {
+						endx = Application.GRID_SIZE;
+					}
+					if (endy > Application.GRID_SIZE) {
+						endy = Application.GRID_SIZE;
+					}
+					setPosition(new Position(isWhoThinking,
+							tempPoints[i].getPosX(), tempPoints[i].getPosY()));
+					analyzeChessMater(startx, starty, endx, endy, isWhoThinking);
+					if (temp != null) {
+						if (temp.getScore() < fiveBetterPoints[0].getScore()) {
+							temp = fiveBetterPoints[0];
+							goodIdx = i;
+						}
+					} else {
 						temp = fiveBetterPoints[0];
 						goodIdx = i;
 					}
-				} else {
-					temp = fiveBetterPoints[0];
-					goodIdx = i;
+					setPosition(new Position(Application.NO,
+							tempPoints[i].getPosX(), tempPoints[i].getPosY()));
 				}
-				setPosition(new Position(Application.NO,tempPoints[i].getPosX(),tempPoints[i].getPosY()));
+				bestPosition = tempPoints[goodIdx];
 			}
-			bestPosition = tempPoints[goodIdx];
 		}
 		setPosition(bestPosition);
 		RecordStack.getInstance().put(bestPosition);
-//		for (int i = 0; i < 5&&fiveBetterPoints[i]!=null; i++){
-//			Log.e("getAiBestPosition", fiveBetterPoints[i].getScore() + ":"+ fiveBetterPoints[i].getPosX() + "," + fiveBetterPoints[i].getPosY());
-//		}
+		// for (int i = 0; i < 5&&fiveBetterPoints[i]!=null; i++){
+		// Log.e("getAiBestPosition", fiveBetterPoints[i].getScore() + ":"+
+		// fiveBetterPoints[i].getPosX() + "," + fiveBetterPoints[i].getPosY());
+		// }
 	}
 
-	private void analyzeChessMater(int sx, int sy, int ex, int ey ) {
+	private void analyzeChessMater(int sx, int sy, int ex, int ey,int isWhoThinking) {
 		// 具体代码...
 		int i, j, k;
 		int tempScore = 0;
@@ -216,17 +229,17 @@ public class QiJu {
 					}
 					// 保存较好的点
 					int wScore, bScore;
-					wScore = analyzeXlian(tmpChessHeng, Application.W)
-							+ analyzeXlian(tmpChessShu, Application.W)
-							+ analyzeXlian(tmpChessZX, Application.W)
-							+ analyzeXlian(tmpChessYX, Application.W);
-					bScore = analyzeXlian(tmpChessHeng, Application.B)
-							+ analyzeXlian(tmpChessShu, Application.B)
-							+ analyzeXlian(tmpChessZX, Application.B)
-							+ analyzeXlian(tmpChessYX, Application.B);
+					wScore = analyzeXlian(tmpChessHeng, Application.WHITE)
+							+ analyzeXlian(tmpChessShu, Application.WHITE)
+							+ analyzeXlian(tmpChessZX,Application.WHITE)
+							+ analyzeXlian(tmpChessYX, Application.WHITE);
+					bScore = analyzeXlian(tmpChessHeng, Application.BLACK)
+							+ analyzeXlian(tmpChessShu, Application.BLACK)
+							+ analyzeXlian(tmpChessZX, Application.BLACK)
+							+ analyzeXlian(tmpChessYX,Application.BLACK);
 					if(wScore>=tempScore||bScore>=tempScore){
 						tempScore = wScore > bScore ? wScore : bScore;
-						insertBetterChessPoint(new Position(Application.B, i, j,tempScore));
+						insertBetterChessPoint(new Position(isWhoThinking, i, j,tempScore));
 					}
 				}
 			}

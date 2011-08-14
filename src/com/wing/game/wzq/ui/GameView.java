@@ -10,6 +10,8 @@ import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
 import android.graphics.drawable.Drawable;
+import android.os.Handler;
+import android.os.Message;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -24,6 +26,14 @@ import com.wing.game.wzq.provider.QiJu;
 import com.wing.game.wzq.provider.RecordStack;
 import com.wing.game.wzq.provider.onDrawThread;
 
+/**
+ * @author lichu
+ *
+ */
+/**
+ * @author lichu
+ *
+ */
 public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 	private Bitmap wBitmap,last, bBitmap,bg,win,time,vs;
 	private Bitmap[] cursor;
@@ -37,24 +47,58 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 	private Position lastPos;
 	private Paint mPaint; 
 	
+	/**
+	 * 是否已经选中落子区域
+	 */
 	private boolean isTouched=false; 
-	private boolean runMode=Application.SINGLEPLAYER;
-	private boolean isWho = Application.WHITE;
+	/**
+	 * 玩棋模式：单人、双人
+	 */
+	private static int runMode=Application.SINGLEPLAYER;
+	/**
+	 * 该谁下棋了
+	 */
+	private int isWhoThinking = Application.WHITE;
+	/**
+	 * 电脑执白子还是黑子
+	 */
+	private int whoIsAngler =  Application.BLACK;
+	
+	private static final int ANGLERTHINK=0;
+	private Handler mHandler = new Handler(){
+
+		@Override
+		public void handleMessage(Message msg) {
+			// TODO Auto-generated method stub
+			switch(msg.what){
+				case ANGLERTHINK:
+				if(!QiJu.getInstance().isWin()){
+						QiJu.getInstance().getAiBestPosition(isWhoThinking);		
+						refreshIsWhoThink();
+				}
+				break;
+				default:
+					super.handleMessage(msg);
+			}		
+		}
+
+	
+	};
 	public GameView(Context context) {
 		super(context);
-		this.getHolder().addCallback(this);
-		this.setFocusable(true); // 20090530
-		this.setFocusableInTouchMode(true);
-		drawThread = new onDrawThread(getHolder(),this);
+		init();
 	}
 	public GameView(Context context, AttributeSet attrs) { // 好像调用的是这个构造函数，为什么不是前面的呢
 		super(context, attrs);
+		init();
+	}
+	private void init(){
 		this.getHolder().addCallback(this);
 		this.setFocusable(true); // 20090530
 		this.setFocusableInTouchMode(true);
 		drawThread = new onDrawThread(getHolder(),this);
 	}
-	private void init(int width,int height){
+	private void initQiPan(int width,int height){
 		if (width <= height)
 			grid_width = (width-10) / Application.GRID_SIZE;
 		else
@@ -168,35 +212,37 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 			posY = (int) ((y - mStartY) / grid_width);
 		}
 //		Log.v("x,y", "" + posX + "," + posY);
-		return new Position(Application.W,posX,posY); 
+		return new Position(Application.WHITE,posX,posY); 
 	}
-	private void initPosition(Position pos){
-		if(runMode==Application.SINGLEPLAYER){
-			//
-			isWho=Application.BLACK;
-		}else if(isWho){
-			isWho=Application.BLACK;
-			//			
-		}else{
-			isWho=Application.WHITE;
-			pos.setID(Application.B); 			
+	public boolean isAnglerThinking(){
+		if(runMode==Application.SINGLEPLAYER&&isWhoThinking==this.whoIsAngler){
+			return true;
 		}
+		return false;
 	}
+	/**
+	 * 
+	 * 如果棋局已经有输赢或者电脑在运算，则触摸棋盘无响应
+	 * 加入已经选中意向落子位置且再次确认同样位置则判定落子，进入落子判定程序，否则更新最新的触摸位置为意向落子位置
+	 * 落子位置进入棋盘栈，进入下一棋手落子模式
+	 *               
+	 */
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
+		if(isAnglerThinking())
+			return true;
 		// TODO Auto-generated method stub
 		if(!QiJu.getInstance().isWin()){
 			Position temp = getPosition(event.getX(),event.getY());
 			if(isTouched&&lastPos.equals(temp)){
 				//记录棋子落点
 				isTouched=false;
-				initPosition(temp);				
+				temp.setID(isWhoThinking); 
+				refreshIsWhoThink();				
 				RecordStack.getInstance().put(temp);
-				QiJu.getInstance().setPosition(temp);				
-				if(runMode==Application.SINGLEPLAYER&&!QiJu.getInstance().isWin()){
-					QiJu.getInstance().getAiBestPosition();		
-					isWho=Application.WHITE;
-				}
+				QiJu.getInstance().setPosition(temp);
+				if(runMode==Application.SINGLEPLAYER)
+					mHandler.sendEmptyMessage(0);
 			}else if(QiJu.getInstance().isValid(temp)){//选中位置在棋盘内且没有下子
 				lastPos=temp;
 				isTouched=true;
@@ -204,9 +250,17 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 		}
 		return super.onTouchEvent(event);
 	}
+	public void refreshIsWhoThink() {
+		// TODO Auto-generated method stub
+		if(isWhoThinking==Application.WHITE){
+			isWhoThinking=Application.BLACK;			
+		}else{
+			isWhoThinking=Application.WHITE;			
+		}
+	}
 	@Override
 	protected void onSizeChanged(int w, int h, int oldw, int oldh) {
-		init(w,h);
+		initQiPan(w,h);
 	}
 	public void surfaceDestroyed(SurfaceHolder holder) {
 		// TODO Auto-generated method stub
@@ -283,18 +337,24 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 			canvas.drawBitmap(vs,138,20,
 					mPaint);
 			if(QiJu.getInstance().isWin()){//胜利图标
-				canvas.drawBitmap(win,isWho?200:80,20,
+				canvas.drawBitmap(win,isWhoThinking==Application.BLACK?200:80,20,
 						mPaint);
 			}else{
-				canvas.drawBitmap(time,isWho?80:200,20,
+				canvas.drawBitmap(time,isWhoThinking==Application.WHITE?80:200,20,
 						mPaint);
 			}
 	}
-	public void setRunMode(boolean runMode){
+	public void setRunMode(int runMode){
 		this.runMode = runMode;
 	}
-	public void reInit(){
-		isWho = Application.WHITE;
+	public void setWhoIsAngler(int whoIsAngler){
+		this.whoIsAngler = whoIsAngler;
+		if(whoIsAngler==Application.WHITE)
+			mHandler.sendEmptyMessage(ANGLERTHINK);
+	}
+	public void reInit(){			
+		if(whoIsAngler==Application.WHITE)
+			mHandler.sendEmptyMessage(ANGLERTHINK);
 	}
 	public static Bitmap reSizePicture(Bitmap orgImg, int newWidth,
 			int newHeight) {
