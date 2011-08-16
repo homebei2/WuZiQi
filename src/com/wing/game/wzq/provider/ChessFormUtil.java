@@ -256,13 +256,13 @@ public class ChessFormUtil {
 			isSpace = true;
 		}
 		for (i = 0; i < HALF_LEN; i++) {
-			if (tmpChess[HALF_LEN + i] == isWho) {
+			if (tmpChess[HALF_LEN + i-1] == isWho) {
 				count++;
 			} else {
 				break;
 			}
 		}
-		if (tmpChess[HALF_LEN + i] == 0) {
+		if (tmpChess[HALF_LEN + i-1] == 0) {
 			isSpace = true;
 		}
 

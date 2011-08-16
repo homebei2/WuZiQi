@@ -108,22 +108,23 @@ public class GameActivity extends BaseActivity implements OnClickListener {
 //		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN ,  
 //		              WindowManager.LayoutParams.FLAG_FULLSCREEN);
     }
+
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		if(v== restart){
-			reInit();
-		}else if(v== back){
-			if(!gameView.isAnglerThinking()){
-				if(runMode==Application.SINGLEPLAYER){
+		if (!gameView.isAnglerThinking()) {
+			if (v == restart) {
+				reInit();
+			} else if (v == back) {
+				if (runMode == Application.SINGLEPLAYER) {
 					RecordStack.getInstance().pop();
-				}else{
+				} else {
 					gameView.refreshIsWhoThink();
-				}		
+				}
 				RecordStack.getInstance().pop();
 				QiJu.getInstance().onBackButton();
 			}
 		}
-		
+
 	}
 	public void reInit(){
 		RecordStack.getInstance().clear();

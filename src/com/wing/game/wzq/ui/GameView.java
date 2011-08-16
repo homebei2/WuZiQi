@@ -73,8 +73,10 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 			switch(msg.what){
 				case ANGLERTHINK:
 				if(!QiJu.getInstance().isWin()){
+//						Log.i("GameView","ANGLERTHINK1:"+ isWhoThinking);
 						QiJu.getInstance().getAiBestPosition(isWhoThinking);		
 						refreshIsWhoThink();
+//						Log.i("GameView","ANGLERTHINK2:"+ isWhoThinking);
 				}
 				break;
 				default:
@@ -96,7 +98,6 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 		this.getHolder().addCallback(this);
 		this.setFocusable(true); // 20090530
 		this.setFocusableInTouchMode(true);
-		drawThread = new onDrawThread(getHolder(),this);
 	}
 	private void initQiPan(int width,int height){
 		if (width <= height)
@@ -215,7 +216,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 		return new Position(Application.WHITE,posX,posY); 
 	}
 	public boolean isAnglerThinking(){
-		if(runMode==Application.SINGLEPLAYER&&isWhoThinking==this.whoIsAngler){
+		if(!QiJu.getInstance().isWin()&&runMode==Application.SINGLEPLAYER&&isWhoThinking==this.whoIsAngler){
 			return true;
 		}
 		return false;
@@ -237,12 +238,12 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 			if(isTouched&&lastPos.equals(temp)){
 				//记录棋子落点
 				isTouched=false;
+//				Log.i("GameView","isTouched1:"+ isWhoThinking);
 				temp.setID(isWhoThinking); 
-				refreshIsWhoThink();				
+				refreshIsWhoThink();	
+//				Log.i("GameView","isTouched2:"+ isWhoThinking);
 				RecordStack.getInstance().put(temp);
 				QiJu.getInstance().setPosition(temp);
-				if(runMode==Application.SINGLEPLAYER)
-					mHandler.sendEmptyMessage(0);
 			}else if(QiJu.getInstance().isValid(temp)){//选中位置在棋盘内且没有下子
 				lastPos=temp;
 				isTouched=true;
@@ -336,12 +337,18 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 					mPaint);	
 			canvas.drawBitmap(vs,138,20,
 					mPaint);
+			
+			Log.i("GameView","onDraw:"+ isWhoThinking);
+			
 			if(QiJu.getInstance().isWin()){//胜利图标
-				canvas.drawBitmap(win,isWhoThinking==Application.BLACK?200:80,20,
+				canvas.drawBitmap(win,isWhoThinking==Application.WHITE?200:80,20,
 						mPaint);
 			}else{
 				canvas.drawBitmap(time,isWhoThinking==Application.WHITE?80:200,20,
 						mPaint);
+			}
+			if(runMode==Application.SINGLEPLAYER&&whoIsAngler==isWhoThinking){
+				mHandler.sendEmptyMessage(ANGLERTHINK);		
 			}
 	}
 	public void setRunMode(int runMode){
@@ -349,12 +356,9 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 	}
 	public void setWhoIsAngler(int whoIsAngler){
 		this.whoIsAngler = whoIsAngler;
-		if(whoIsAngler==Application.WHITE)
-			mHandler.sendEmptyMessage(ANGLERTHINK);
 	}
-	public void reInit(){			
-		if(whoIsAngler==Application.WHITE)
-			mHandler.sendEmptyMessage(ANGLERTHINK);
+	public void reInit(){	
+		isWhoThinking=Application.WHITE;	
 	}
 	public static Bitmap reSizePicture(Bitmap orgImg, int newWidth,
 			int newHeight) {
