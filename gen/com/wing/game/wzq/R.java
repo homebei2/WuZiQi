@@ -34,7 +34,7 @@ public final class R {
         public static final int Multi=0x7f070006;
         public static final int Single=0x7f070007;
         public static final int about=0x7f070008;
-        public static final int adLayout=0x7f070005;
+        public static final int adview_ayout=0x7f070005;
         public static final int back=0x7f070004;
         public static final int gameview=0x7f070001;
         public static final int main=0x7f070000;

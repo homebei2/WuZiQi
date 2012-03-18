@@ -44,6 +44,7 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 	private int grid_width; // 棋盘格的宽度
 	private int mStartX;// 棋盘定位的左上角X
 	private int mStartY;// 棋盘定位的左上角Y	
+	private int width,height;
 	private Position lastPos;
 	private Paint mPaint; 
 	
@@ -100,14 +101,16 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 		this.setFocusableInTouchMode(true);
 	}
 	private void initQiPan(int width,int height){
-		if (width <= height)
+		if (width <= height){
 			grid_width = (width-10) / Application.GRID_SIZE;
-		else
+			this.width = width;
+		}else{
 			grid_width = (height-10) / Application.GRID_SIZE;
-
+			this.width = height;
+		}
 		chess_dia = grid_width - 2;
 		mStartX = (width - Application.GRID_SIZE * grid_width) >> 1;
-		mStartY = 80;
+		mStartY = grid_width*3;
 		
 		Bitmap bitmap = Bitmap.createBitmap(chess_dia, chess_dia,
 				Bitmap.Config.ARGB_8888);
@@ -330,21 +333,21 @@ public class GameView  extends SurfaceView implements SurfaceHolder.Callback{
 			}
 			//画顶部界面
 			canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),
-					R.drawable.human),20,20,
+					R.drawable.human),grid_width-chess_dia/2,20,
 					mPaint);
 			canvas.drawBitmap(BitmapFactory.decodeResource(getResources(),
-					R.drawable.ai),260,20,
+					R.drawable.ai),width-grid_width-chess_dia,20,
 					mPaint);	
-			canvas.drawBitmap(vs,138,20,
+			canvas.drawBitmap(vs,width/2-chess_dia/2,20,
 					mPaint);
 			
-			Log.i("GameView","onDraw:"+ isWhoThinking);
+//			Log.i("GameView","onDraw:"+ isWhoThinking);
 			
 			if(QiJu.getInstance().isWin()){//胜利图标
-				canvas.drawBitmap(win,isWhoThinking==Application.WHITE?200:80,20,
+				canvas.drawBitmap(win,isWhoThinking==Application.WHITE?(width/4-chess_dia/2):(width*3/4-chess_dia),20,
 						mPaint);
 			}else{
-				canvas.drawBitmap(time,isWhoThinking==Application.WHITE?80:200,20,
+				canvas.drawBitmap(time,isWhoThinking==Application.WHITE?(width/4-chess_dia):(width*3/4-chess_dia),20,
 						mPaint);
 			}
 			if(runMode==Application.SINGLEPLAYER&&whoIsAngler==isWhoThinking){

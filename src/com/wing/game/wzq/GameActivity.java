@@ -1,41 +1,28 @@
 package com.wing.game.wzq;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.app.AlertDialog.Builder;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import com.guohead.sdk.GuoheAdLayout;
-import com.guohead.sdk.GuoheAdManager;
+
+import com.adview.AdViewInterface;
+import com.adview.AdViewLayout;
+import com.adview.AdViewTargeting;
+import com.adview.AdViewTargeting.RunMode;
+import com.adview.AdViewTargeting.UpdateMode;
 import com.wing.game.wzq.provider.QiJu;
 import com.wing.game.wzq.provider.RecordStack;
 import com.wing.game.wzq.ui.GameView;
 
-public class GameActivity extends BaseActivity implements OnClickListener {
+public class GameActivity extends BaseActivity implements OnClickListener, AdViewInterface {
     /** Called when the activity is first created. */
 	private TextView timer;
 	private static int time=0;
@@ -66,21 +53,12 @@ public class GameActivity extends BaseActivity implements OnClickListener {
         back.setOnClickListener(this);
         
         
-        
+		  /*下面两行只用于测试,完成后一定要去掉,参考文挡说明*/
+//      AdViewTargeting.setUpdateMode(UpdateMode.EVERYTIME);  //每次都从服务器取配置
+//      AdViewTargeting.setRunMode(RunMode.TEST);        //保证所有选中的广告公司都为测试状态
        
-        RelativeLayout.LayoutParams GuoheAdLayoutParams = new RelativeLayout.LayoutParams(
-                LayoutParams.FILL_PARENT, LayoutParams.WRAP_CONTENT);
-        LinearLayout footer = (LinearLayout)findViewById(R.id.adLayout);
-        GuoheAdLayout adLayout = new GuoheAdLayout(this);
-        adLayout.setBackgroundColor(Color.TRANSPARENT);
-        footer.addView(adLayout, GuoheAdLayoutParams);
-//        footer.invalidate();
-        //timer = (TextView) this.findViewById(R.id.time);
-        //timer.setTextColor(Color.BLACK);
-        //timeHandler = new TimeHandler(Looper.getMainLooper());  
-        //timeThread = new TimeThread();
-        //timeThread.start();
-        
+        AdViewLayout adViewLayout = (AdViewLayout)findViewById(R.id.adview_ayout);
+        adViewLayout.setAdViewInterface(this);
     }
 	@Override
 	protected void onPause() {
@@ -93,7 +71,6 @@ public class GameActivity extends BaseActivity implements OnClickListener {
 		// TODO Auto-generated method stub
 		super.onDestroy();
 		flag = false;
-		GuoheAdManager.finish(this);
 		Log.e("onDestroy", "onDestroy");
 	}
 	@Override
@@ -192,5 +169,15 @@ public class GameActivity extends BaseActivity implements OnClickListener {
 				}
 			}
 		}		
+	}
+	@Override
+	public void onClickAd() {
+		// TODO Auto-generated method stub
+		Log.i("onClickAd", "onClickAd");
+	}
+	@Override
+	public void onDisplayAd() {
+		// TODO Auto-generated method stub
+		Log.i("onDisplayAd", "onDisplayAd");
 	}
 }
